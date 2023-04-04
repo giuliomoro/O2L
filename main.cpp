@@ -11,7 +11,12 @@
 // - get the latest from https://github.com/BelaPlatform/bb.org-overlays into /opt/bb.org-overlays
 // - run `make all install`
 // - reboot
-// - use Mis
+// - use PinmuxUtils::set() to set the pin's mode to SPI (this is done below in setup() for you)
+// - now connect P9.30 to your neopixel-like strip. *IMPORTANT*: solder a wire
+// to P9.30 from the BeagleBone Black's back, or insert a wire into the socket
+// between the Bela cape and the BeagelBone Black, but do _not_ get the signal
+// from the Bela cape's socket. This output is 3.3V so possibly, depending on
+// your specific device, you may need a level shifter
 #include <AddressableLeds.h>
 #include <vector>
 #include <libraries/Trill/Trill.h>
