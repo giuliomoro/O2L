@@ -7,7 +7,7 @@ bool AddressableLeds::readBitField(const uint8_t* data, uint32_t offset)
 {
 	uint8_t position = offset % kBitsPerByte;
 	unsigned int i = offset / kBitsPerByte;
-	return data[i] & (1 << position);
+	return data[i] & (1 << (7 - position));
 }
 
 void AddressableLeds::writeBitField(uint8_t* data, uint32_t offset, bool value)
