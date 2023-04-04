@@ -50,7 +50,7 @@ int parseMessage(oscpkt::Message msg, const char* address, void*)
 	} error = kOk;
 	printf("Message from %s; %s\n", address, msg.addressPattern().c_str());
 	// check state (non-display) messages first
-	std::string baseAddr = "/leds/setRange";
+	std::string baseAddr = "/leds/setRaw";
 	if (msg.partialMatch(baseAddr)) {
 		enum {
 			kR,
@@ -109,7 +109,6 @@ int parseMessage(oscpkt::Message msg, const char* address, void*)
 						}
 					}
 				}
-				printf("\n");
 				if(kOk == error)
 					gLeds.send(gRgb);
 			}
@@ -139,7 +138,8 @@ int parseMessage(oscpkt::Message msg, const char* address, void*)
 
 int main(int argc, char* argv[])
 {
-	// this one is only needed on Bela and requires the mods mentioned above
+	// the PinmuxUtils::set() call is only needed on Bela and requires the
+	// mods mentioned above.
 	// It will print an error on BelaMini, but nothing to worry about
 	PinmuxUtils::set("P9_30", "spi");
 
