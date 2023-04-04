@@ -73,6 +73,9 @@ int parseMessage(oscpkt::Message msg, const char* address, void*)
 		{
 			size_t start;
 			args.popNumber(start);
+			start *= kBytesPerRgb;
+			float gain;
+			args.popNumber(gain);
 			size_t numArgs = args.nbArgRemaining();
 			if(!numArgs || (kRgb == color && numArgs % kBytesPerRgb) || !args.isOk())
 				error = kWrongArguments;
@@ -86,17 +89,16 @@ int parseMessage(oscpkt::Message msg, const char* address, void*)
 						error = kWrongArguments;
 						break;
 					}
-					uint8_t ledValue = clipForLed(val);
+					uint8_t ledValue = clipForLed(val * gain);
 					// now use the retrieved value
 					if(kRgb == color)
 					{
 						// in kRgb mode, set each color per each LED in order
-						gRgb[start * kBytesPerRgb + n] = ledValue;
+						gRgb[start + n] = ledValue;
 						++n;
 					} else {
 						// in monochrome mode, set the corresponding color
 						// and zero out the rest
-						printf("%d ", ledValue);
 						for(size_t c = 0; c < kBytesPerRgb; ++c)
 						{
 							if(color == c)
