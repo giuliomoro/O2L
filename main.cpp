@@ -1,4 +1,4 @@
-// On BelaMini, this runs out of the box using P1.12
+// On BelaMini, this runs out of the box using P2.25
 //
 // On Bela, this only works if you sacrifice the audio input and perform a hw
 // mod and load a dedicated device-tree overlay.
@@ -12,6 +12,7 @@
 // - run `make all install`
 // - reboot
 // - use PinmuxUtils::set() to set the pin's mode to SPI (this is done below in setup() for you)
+// Using it:
 // - now connect P9.30 to your neopixel-like strip. *IMPORTANT*: solder a wire
 // to P9.30 from the BeagleBone Black's back, or insert a wire into the socket
 // between the Bela cape and the BeagelBone Black, but do _not_ get the signal
@@ -143,10 +144,8 @@ int parseMessage(oscpkt::Message msg, const char* address, void*)
 
 int main(int argc, char* argv[])
 {
-	// the PinmuxUtils::set() call is only needed on Bela and requires the
-	// mods mentioned above.
-	// It will print an error on BelaMini, but nothing to worry about
-	PinmuxUtils::set("P9_30", "spi");
+	PinmuxUtils::set("P9_30", "spi"); // works on Bela, prints error on BelaMini
+	PinmuxUtils::set("P2_25", "spi"); // works on BelaMini, prints error on Bela
 
 	if(gLeds.setup("/dev/spidev2.1"))
 		return false;
