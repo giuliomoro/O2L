@@ -148,7 +148,7 @@ int main(int argc, char* argv[])
 	PinmuxUtils::set("P2_25", "spi"); // works on BelaMini, prints error on Bela
 
 	if(gLeds.setup("/dev/spidev2.1"))
-		return false;
+		return 1;
 	// OSC
 	oscReceiver.setup(gLocalPort, parseMessage);
 
@@ -158,5 +158,5 @@ int main(int argc, char* argv[])
 	signal(SIGTERM, interrupt_handler);
 	while(!gStop)
 		usleep(200000);
-	return true;
+	return 0;
 }
