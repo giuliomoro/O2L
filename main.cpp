@@ -18,7 +18,7 @@
 // between the Bela cape and the BeagelBone Black, but do _not_ get the signal
 // from the Bela cape's socket. This output is 3.3V so possibly, depending on
 // your specific device, you may need a level shifter
-#include <AddressableLeds.h>
+#include "pixel.hpp"
 #include <vector>
 #include <libraries/Trill/Trill.h>
 #include <cmath>
@@ -29,9 +29,9 @@
 const int gLocalPort = 7562; //port for incoming OSC messages
 uint8_t kNumLeds = 23; // number of LEDs on the strip
 
-static AddressableLeds gLeds;
+static PixelBone_Pixel strip(kNumLeds);
 static OscReceiver oscReceiver;
-static constexpr uint8_t kBytesPerRgb = AddressableLeds::kBytesPerRgb;
+static constexpr uint8_t kBytesPerRgb = 3;
 
 static bool gStop;
 // Handle Ctrl-C by requesting that the audio rendering stop
@@ -116,7 +116,15 @@ int parseMessage(oscpkt::Message msg, const char* address, void*)
 					}
 				}
 				if(kOk == error)
-					gLeds.send(gRgb);
+				{
+					strip.clear();
+					for (uint32_t p = 0; p < kNumLeds; p++)
+					{
+						size_t k = p * kBytesPerRgb;
+						strip.setPixelColor(p, PixelBone_Pixel::Color(gRgb[k + 0], gRgb[k + 1], gRgb[k + 2]));
+					}
+					strip.show();
+				}
 			}
 		}
 	} else
@@ -144,11 +152,6 @@ int parseMessage(oscpkt::Message msg, const char* address, void*)
 
 int main(int argc, char* argv[])
 {
-	PinmuxUtils::set("P9_30", "spi"); // works on Bela, prints error on BelaMini
-	PinmuxUtils::set("P2_25", "spi"); // works on BelaMini, prints error on Bela
-
-	if(gLeds.setup("/dev/spidev2.1"))
-		return 1;
 	// OSC
 	oscReceiver.setup(gLocalPort, parseMessage);
 
