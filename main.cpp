@@ -23,7 +23,7 @@
 #include <libraries/Trill/Trill.h>
 #include <cmath>
 #include <MiscUtilities.h>
-#include <libraries/OscReceiver/OscReceiver.h>
+#include <OscReceiver/OscReceiver.h>
 #include <signal.h>
 
 const int gLocalPort = 7562; //port for incoming OSC messages
