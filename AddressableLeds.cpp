@@ -3,6 +3,7 @@
 #include <cmath>
 #include <stdio.h>
 
+#ifdef WS2812
 bool AddressableLeds::readBitField(const uint8_t* data, uint32_t offset)
 {
 	uint8_t position = offset % kBitsPerByte;
@@ -75,10 +76,10 @@ void AddressableLeds::sendSpi(uint8_t* data, size_t length, bool verbose)
 	else
 		fprintf(stderr, "SPI: Transaction Failed\r\n");
 }
+#endif // WS2812
 
 int AddressableLeds::send(const std::vector<uint8_t>& rgb, bool verbose)
 {
-	std::vector<uint8_t> data(kSpiMaxTransferSize);
 	if(verbose)
 	{
 		printf("data: ");
@@ -89,6 +90,8 @@ int AddressableLeds::send(const std::vector<uint8_t>& rgb, bool verbose)
 		}
 		printf("\n");
 	}
+#ifdef WS2812
+	std::vector<uint8_t> data(kSpiMaxTransferSize);
 	ssize_t len = kSpiLeadingZeros + rgbToClk(rgb.data(), rgb.size(), data.data() + kSpiLeadingZeros, data.size() - kSpiLeadingZeros);
 	if(len < 0) {
 		fprintf(stderr, "Error: message too long\n");
@@ -135,6 +138,32 @@ int AddressableLeds::send(const std::vector<uint8_t>& rgb, bool verbose)
 
 	sendSpi(data.data(), data.size(), verbose);
 	return 0;
+#endif // WS2812
+#ifdef SK9822
+	std::vector<uint32_t> data(rgb.size() / 3 + 2);
+	uint32_t startFrame = 0;
+	data.front() = startFrame;
+	uint32_t endFrame = 0xffffffff;
+	data.back() = endFrame;
+	// LED frames
+	for(size_t n = 0; n < data.size(); ++n)
+	{
+		uint8_t red = data[n * 3];
+		uint8_t green = data[n * 3 + 1];
+		uint8_t blue = data[n * 3 + 2];
+		uint8_t global = 0xff;
+		data[n] = global << 24 |
+			blue << 16 |
+			green << 8 |
+			red;
+	}
+	int ret = spi.transfer((uint8_t*)data.data(), NULL, data.size() * sizeof(data[0]));
+	if(0 == ret)
+		verbose && printf("SPI: Transaction Complete. Sent %d bytes\n", data.size());
+	else
+		fprintf(stderr, "SPI: Transaction Failed\r\n");
+	return ret;
+#endif // SK9822
 }
 
 int AddressableLeds::setup(const std::string& device)

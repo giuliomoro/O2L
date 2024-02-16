@@ -2,6 +2,8 @@
 #include <libraries/Spi/Spi.h>
 #include <string>
 #pragma once
+#define SK9822
+//#define WS2812
 
 class AddressableLeds
 {
@@ -10,9 +12,10 @@ public:
 private:
 	Spi spi;
 	static constexpr unsigned int kSpiClock = 12000000;
+	static constexpr unsigned int kSpiWordLength = 32;
+#ifdef WS2812
 	static constexpr unsigned int kSpiMinTransferSize = 160; // min number of bytes to trigger DMA transfer
 	static constexpr unsigned int kSpiMaxTransferSize = 4096; // max number of bytes to be sent at once
-	static constexpr unsigned int kSpiWordLength = 32;
 	static constexpr uint8_t kSpiMsbFirst = 1;
 	static constexpr float kSpiInterWordTime = 200;
 	static constexpr float kSpiPeriodNs = 1000000000.0 / kSpiClock;
@@ -61,6 +64,7 @@ private:
 	static void writeBitField(uint8_t* data, uint32_t offset, bool value);
 	ssize_t rgbToClk(const uint8_t* rgb, size_t numRgb, uint8_t* out, size_t numOut);
 	void sendSpi(uint8_t* data, size_t length, bool verbose);
+#endif // WS2812
 public:
 	int send(const std::vector<uint8_t>& rgb, bool verbose = false);
 	int setup(const std::string& device);
