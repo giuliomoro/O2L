@@ -1,9 +1,12 @@
+/** Mappings of the GPIO devices */
+#define GPIO0 0x44E07000
 
+/** Offsets for the clear and set registers in the devices */
+#define GPIO_CLEARDATAOUT 0x190
+#define GPIO_SETDATAOUT 0x194
 
-
-
-
-
+#define GPIO_BASE GPIO0
+#define GPIO_PIN 8
 
 
 .origin 0
@@ -176,20 +179,20 @@ WORD_LOOP:
   MOV r2, 0
 
   QBBS gpio0_r10_skip, r10, r6
- SET r2, r2, 8 
+ SET r2, r2, GPIO_PIN
  gpio0_r10_skip: 
 
 
 
-  MOV r20, (0|(1<<8))
+  MOV r20, (0|(1<<GPIO_PIN))
 
 
-  MOV r22, 0x44E07000 | 0x190
+  MOV r22, GPIO_BASE | GPIO_CLEARDATAOUT
 
   WAITNS 900, wait_one_time
   SBBO r20, r22, 0, 4
 
-  MOV r22, 0x44E07000 | 0x194
+  MOV r22, GPIO_BASE | GPIO_SETDATAOUT
 
 
   WAITNS 1150, wait_frame_spacing_time
@@ -199,7 +202,7 @@ WORD_LOOP:
   SBBO r20, r22, 0, 4
 
 
-  MOV r22, 0x44E07000 | 0x190
+  MOV r22, GPIO_BASE | GPIO_CLEARDATAOUT
 
   WAITNS 240, wait_zero_time
 
@@ -216,8 +219,8 @@ WORD_LOOP:
  QBNE WORD_LOOP, r1, #0
 
 
- MOV r20, (0|(1<<8))
- MOV r10, 0x44E07000 | 0x190
+ MOV r20, (0|(1<<GPIO_PIN))
+ MOV r10, GPIO_BASE | GPIO_CLEARDATAOUT
 
  WAITNS 1000, end_of_frame_clear_wait
  SBBO r20, r10, 0, 4
