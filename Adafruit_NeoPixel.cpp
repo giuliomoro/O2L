@@ -44,6 +44,7 @@
  */
 
 #include "Adafruit_NeoPixel.h"
+#include <string.h>
 
 #if defined(TARGET_LPC1768)
 #include <time.h>

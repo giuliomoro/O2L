@@ -36,6 +36,10 @@
 #ifndef ADAFRUIT_NEOPIXEL_H
 #define ADAFRUIT_NEOPIXEL_H
 
+#define PROGMEM
+#include <stdint.h>
+#include <libraries/BelaArduino/Arduino.h>
+
 #ifdef ARDUINO
 #if (ARDUINO >= 100)
 #include <Arduino.h>
