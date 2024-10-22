@@ -36,9 +36,14 @@
 #ifndef ADAFRUIT_NEOPIXEL_H
 #define ADAFRUIT_NEOPIXEL_H
 
-#define PROGMEM
+#define PIXELBONE
+
+#ifdef PIXELBONE
+#define PROGMEM // for compatibility with Arduino
 #include <stdint.h>
 #include <libraries/BelaArduino/Arduino.h>
+#include "pixel.hpp"
+#endif
 
 #ifdef ARDUINO
 #if (ARDUINO >= 100)
@@ -222,7 +227,9 @@ public:
   // Constructor: number of LEDs, pin number, LED type
   Adafruit_NeoPixel(uint16_t n, int16_t pin = 6,
                     neoPixelType type = NEO_GRB + NEO_KHZ800);
+#ifndef PIXELBONE
   Adafruit_NeoPixel(void);
+#endif // !PIXELBONE
   ~Adafruit_NeoPixel();
 
   void begin(void);
@@ -234,7 +241,13 @@ public:
   void fill(uint32_t c = 0, uint16_t first = 0, uint16_t count = 0);
   void setBrightness(uint8_t);
   void clear(void);
+#ifdef PIXELBONE
+private:
+#endif // !PIXELBONE
   void updateLength(uint16_t n);
+#ifdef PIXELBONE
+public:
+#endif // !PIXELBONE
   void updateType(neoPixelType t);
   /*!
     @brief   Check whether a call to show() will start sending data
@@ -411,6 +424,9 @@ protected:
   int sm = 0;
   bool init = true;
 #endif
+#ifdef PIXELBONE
+  PixelBone_Pixel strip;
+#endif // PIXELBONE
 };
 
 #endif // ADAFRUIT_NEOPIXEL_H
