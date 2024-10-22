@@ -91,7 +91,7 @@ void pru_exec_code(pru_t *const pru, const unsigned int* code, int codeLen) {
 
 void pru_close(pru_t *const pru) {
   // \todo unmap memory
-  prussdrv_pru_wait_event(PRU_EVTOUT_0);
+  prussdrv_pru_wait_event_timeout(PRU_EVTOUT_0, 100000);
   prussdrv_pru_clear_event(PRU_EVTOUT_0, PRU0_ARM_INTERRUPT);
   prussdrv_pru_disable(pru->pru_num);
   prussdrv_exit();
