@@ -45,6 +45,7 @@
 
 #include "Adafruit_NeoPixel.h"
 #include <string.h>
+#include <stdexcept>
 
 #if defined(TARGET_LPC1768)
 #include <time.h>
@@ -79,7 +80,11 @@
   @return  Adafruit_NeoPixel object. Call the begin() function before use.
 */
 Adafruit_NeoPixel::Adafruit_NeoPixel(uint16_t n, int16_t p, neoPixelType t)
-    : begun(false), brightness(0), pixels(NULL), endTime(0) {
+    : begun(false), brightness(0), pixels(NULL), endTime(0)
+#ifdef PIXELBONE
+      , strip(n)
+#endif // PIXELBONE
+{
   updateType(t);
   updateLength(n);
   setPin(p);
@@ -95,6 +100,7 @@ Adafruit_NeoPixel::Adafruit_NeoPixel(uint16_t n, int16_t p, neoPixelType t)
 #endif
 }
 
+#ifndef PIXELBONE
 /*!
   @brief   "Empty" NeoPixel constructor when length, pin and/or pixel type
            are not known at compile-time, and must be initialized later with
@@ -113,6 +119,7 @@ Adafruit_NeoPixel::Adafruit_NeoPixel()
       begun(false), numLEDs(0), numBytes(0), pin(-1), brightness(0),
       pixels(NULL), rOffset(1), gOffset(0), bOffset(2), wOffset(1), endTime(0) {
 }
+#endif // PIXELBONE
 
 /*!
   @brief   Deallocate Adafruit_NeoPixel object, set data pin back to INPUT.
@@ -3152,7 +3159,16 @@ if(is800KHz) {
   }
 #endif // NEO_KHZ400
 
-#endif // ARM
+#elif defined(PIXELBONE)
+  for(size_t p = 0; p < numLEDs; p++)
+  {
+    size_t k = p * ((wOffset == rOffset) ? 3 : 4);
+    strip.setPixelColor(p, pixels[k + rOffset], pixels[k + gOffset], pixels[k + bOffset]);
+  }
+  strip.show();
+#else
+#error unsupported board
+#endif
 
   // END ARM ----------------------------------------------------------------
 
