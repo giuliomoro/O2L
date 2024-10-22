@@ -82,7 +82,7 @@
 Adafruit_NeoPixel::Adafruit_NeoPixel(uint16_t n, int16_t p, neoPixelType t)
     : begun(false), brightness(0), pixels(NULL), endTime(0)
 #ifdef PIXELBONE
-      , strip(n)
+      , strip(n) 
 #endif // PIXELBONE
 {
   updateType(t);
