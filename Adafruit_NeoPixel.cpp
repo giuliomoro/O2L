@@ -43,6 +43,7 @@
  *
  */
 
+#if __has_include(<libraries/BelaArduino/BelaArduino.h>)
 #include "Adafruit_NeoPixel.h"
 #include <string.h>
 #include <stdexcept>
@@ -3737,3 +3738,4 @@ neoPixelType Adafruit_NeoPixel::str2order(const char *v) {
   if (w < 0) w = r; // If 'w' not specified, duplicate r bits
   return (w << 6) | (r << 4) | ((g & 3) << 2) | (b & 3);
 }
+#endif //__has_include(<libraries/BelaArduino/BelaArduino.h>)

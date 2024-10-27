@@ -35,6 +35,7 @@
 
 #ifndef ADAFRUIT_NEOPIXEL_H
 #define ADAFRUIT_NEOPIXEL_H
+#if __has_include(<libraries/BelaArduino/BelaArduino.h>)
 
 #define PIXELBONE
 
@@ -429,4 +430,5 @@ protected:
 #endif // PIXELBONE
 };
 
+#endif // has_include(<libraries/BelaArduino/BelaArduino.h>)
 #endif // ADAFRUIT_NEOPIXEL_H
