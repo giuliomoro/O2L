@@ -4,7 +4,7 @@
 #include "ws281x_bin.h"
 
 /* GPIO pins used */
-static const uint8_t gpios0 = 23; // this is P8.35 on beagle bone
+static const uint8_t gpios0 = 8; // this is P8.35 on beagle bone
 
 PixelBone_Pixel::PixelBone_Pixel(uint16_t pixel_count)
     : pru0(pru_init(0)), num_pixels(pixel_count),
@@ -24,10 +24,10 @@ PixelBone_Pixel::PixelBone_Pixel(uint16_t pixel_count)
 
   // Watch for a done response that indicates a proper startup
   // TODO: timeout if it fails
-  std::cout << "waiting for response from pru0... ";
+  //std::cout << "waiting for response from pru0... ";
   while (!ws281x->response)
     ;
-  std::cout << "OK" << std::endl;
+  //std::cout << "OK" << std::endl;
 };
 
 PixelBone_Pixel::~PixelBone_Pixel() {
