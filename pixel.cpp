@@ -2,9 +2,14 @@
 #include <iostream>
 #include <cstring>
 #include "ws281x_bin.h"
+#include "ws281x.h"
 
-/* GPIO pins used */
-static const uint8_t gpios0 = 8; // this is P8.35 on beagle bone
+enum {
+	GPIO0 = 0,
+	GPIO1 = 1,
+	GPIO2 = 2,
+	GPIO3 = 3,
+};
 
 PixelBone_Pixel::PixelBone_Pixel(uint16_t pixel_count)
     : pru0(pru_init(0)), num_pixels(pixel_count),
@@ -17,7 +22,7 @@ PixelBone_Pixel::PixelBone_Pixel(uint16_t pixel_count)
   *(ws281x) = ws281x_command_t((unsigned)pixel_count);
 
   // Configure all of our output pins.
-  pru_gpio(0, gpios0, 1, 0);
+  pru_gpio(GPIO_BANK, GPIO_PIN, 1, 0);
 
   // Initiate the PRU0 program
   pru_exec_code(pru0, PRUcode, sizeof(PRUcode));
