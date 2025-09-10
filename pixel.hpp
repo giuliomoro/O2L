@@ -52,7 +52,7 @@ class PixelBone_Pixel {
   ws281x_command_t *ws281x;
   size_t buffer_size;
   uint8_t current_buffer_num;
-  uint8_t brightness;
+  //uint8_t brightness;
 
 public:
   PixelBone_Pixel(uint16_t pixel_count);

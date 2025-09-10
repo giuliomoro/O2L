@@ -36,7 +36,7 @@ POSSIBILITY OF SUCH DAMAGE.
 
 #include "gfx.hpp"
 #include <cstdlib>
-#include "glcdfont.c"
+#include "glcdfont.h"
 #define pgm_read_byte(addr) (*(const unsigned char *)(addr))
 
 PixelBone_GFX::PixelBone_GFX(int16_t w, int16_t h) : WIDTH(w), HEIGHT(h) {
