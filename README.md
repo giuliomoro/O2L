@@ -12,10 +12,14 @@ simply change the `GPIO_PIN` line in `ws281x.h` to:
 #define GPIO_PIN 7
 ```
  
-Either way, running this without external electronics requires a bit of luck, because according to most NeoPixel-style
+Running this without external electronics requires, in principle, a bit of luck, because according to most NeoPixel-style
 datasheets, the 3.3V signal from Bela is not high enough for the LED's data line when the LEDs are powered from 5V.
 You may need additional electronics, either a power diode or a signal switching transistor, as noted
 [here](https://forum.bela.io/d/3001-control-neopixel-with-pure-data/25).
+**However** we have found in practice that in the real world we yet have to find a strip that doesn't work with the 3.3V digital
+signals coming from the GPIO pins, so you could start without an external level shifter and then only add it in if the LEDs
+don't perform reliably without it.
+
 Some tweaking to the code to achieve the desired signal timing may be required depending on the datasheet of the specific
 device you are using, see [here](https://forum.bela.io/d/3001-control-neopixel-with-pure-data/25) for some examples of that.
 
