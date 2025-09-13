@@ -38,7 +38,10 @@ int parseMessage(oscpkt::Message msg, const char* address, void*)
 		kWrongArguments,
 		kUnmatchedPattern,
 	} error = kOk;
-	printf("Message from %s; %s\n", address, msg.addressPattern().c_str());
+	static size_t count = 0;
+	printf("Message %zu from %s; %s\n", count, address, msg.addressPattern().c_str());
+	fflush(stdout);
+	count++;
 	// check state (non-display) messages first
 	std::string baseAddr = "/leds/setRaw";
 	if (msg.partialMatch(baseAddr)) {
