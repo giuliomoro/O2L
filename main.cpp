@@ -117,6 +117,7 @@ int parseMessage(oscpkt::Message msg, const char* address, void*)
 					strip.setPixelColor(p, PixelBone_Pixel::Color(gRgb[k + 0], gRgb[k + 1], gRgb[k + 2]));
 				}
 				strip.show();
+				strip.wait();
 			}
 		}
 	} else
