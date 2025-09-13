@@ -5,7 +5,6 @@
 // for instance GPIO_PIN 20 would be P1.20
 #include "pixel.hpp"
 #include <vector>
-#include <libraries/Trill/Trill.h>
 #include <cmath>
 #include <MiscUtilities.h>
 #include <libraries/OscReceiver/OscReceiver.h>
