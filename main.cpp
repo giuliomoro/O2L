@@ -1,23 +1,8 @@
 // On BelaMini, this runs out of the box using P2.25
 //
-// On Bela, this only works if you sacrifice the audio input and perform a hw
-// mod and load a dedicated device-tree overlay.
-// Hardware mod:
-// - remove the Bela cape
-// - bend pin P9.30 out so that it doesn't enter the BeagleBone Black
-// - insert a wire into P9.30 on the BeagleBone Black or solder it to its pad at the back of the BeagleBone Black
-// - re-insert the Bela cape
-// Loading device tree overlay:
-// - get the latest from https://github.com/BelaPlatform/bb.org-overlays into /opt/bb.org-overlays
-// - run `make all install`
-// - reboot
-// - use PinmuxUtils::set() to set the pin's mode to SPI (this is done below in setup() for you)
-// Using it:
-// - now connect P9.30 to your neopixel-like strip. *IMPORTANT*: solder a wire
-// to P9.30 from the BeagleBone Black's back, or insert a wire into the socket
-// between the Bela cape and the BeagelBone Black, but do _not_ get the signal
-// from the Bela cape's socket. This output is 3.3V so possibly, depending on
-// your specific device, you may need a level shifter
+// On Bela, this runs on P8.35
+// On BelaMini, you have to modify the pin and/or bank in ws281x.h,s
+// for instance GPIO_PIN 20 would be P1.20
 #include "pixel.hpp"
 #include <vector>
 #include <libraries/Trill/Trill.h>
