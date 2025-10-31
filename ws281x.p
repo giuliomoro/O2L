@@ -1,13 +1,5 @@
 #include "ws281x.h"
-/** Mappings of the GPIO devices */
-#define GPIO0 0x44E07000
-#define GPIO1 0x4804C000
-#define GPIO2 0x481AC000
-#define GPIO3 0x481AE000,
-
-/** Offsets for the clear and set registers in the devices */
-#define GPIO_CLEARDATAOUT 0x190
-#define GPIO_SETDATAOUT 0x194
+#include "../../pru/board_specific.h"
 
 #define GPIO_BASE GPIO_BANK
 
