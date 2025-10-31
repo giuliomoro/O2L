@@ -31,16 +31,16 @@ struct pixel_t {
  */
 struct ws281x_command_t {
   // in the DDR shared with the PRU
-  uintptr_t pixels_dma;
+  volatile uint32_t pixels_dma;
 
   // Length in pixels of the longest LED strip.
-  unsigned num_pixels;
+  volatile uint32_t num_pixels;
 
   // write 1 to start, 0xFF to abort. will be cleared when started
-  volatile unsigned command;
+  volatile uint32_t command;
 
   // will have a non-zero response written when done
-  volatile unsigned response;
+  volatile uint32_t response;
   ws281x_command_t(unsigned _num_pixels)
       : pixels_dma(0), num_pixels(_num_pixels), command(0), response(0) {};
 
