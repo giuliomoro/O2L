@@ -1,7 +1,9 @@
 #include "pixel.hpp"
 #include <iostream>
 #include <cstring>
+#if ENABLE_PRU_UIO
 #include "ws281x_bin.h"
+#endif // ENABLE_PRU_UIO
 #include "ws281x.h"
 
 enum {
@@ -25,7 +27,12 @@ PixelBone_Pixel::PixelBone_Pixel(uint16_t pixel_count)
   pru_gpio(GPIO_BANK, GPIO_PIN, 1, 0);
 
   // Initiate the PRU0 program
+#if ENABLE_PRU_UIO
   pru_exec_code(pru0, PRUcode, sizeof(PRUcode));
+#endif
+#if ENABLE_PRU_RPROC
+  pru_exec_file(pru0, "ws281x.out");
+#endif
 
   // Watch for a done response that indicates a proper startup
   // TODO: timeout if it fails

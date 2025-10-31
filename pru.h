@@ -27,6 +27,7 @@ typedef struct {
   void *ddr;          // PRU DMA address (in ARM space)
   uintptr_t ddr_addr; // PRU DMA address (in PRU space)
   size_t ddr_size;    // Size in bytes of the shared space
+  void* p;
 } pru_t;
 
 extern pru_t *pru_init(const unsigned short pru_num);
@@ -34,6 +35,8 @@ extern pru_t *pru_init(const unsigned short pru_num);
 extern void pru_exec(pru_t *const pru, const char *const program);
 
 extern void pru_exec_code(pru_t *const pru, const unsigned int* code, int codeLen);
+
+extern void pru_exec_file(pru_t *const pru, const char* filename);
 
 extern void pru_close(pru_t *const pru);
 

@@ -12,9 +12,11 @@
 #include <fcntl.h>
 #include <errno.h>
 #include <unistd.h>
+#include "pru.h"
+
+#if ENABLE_PRU_UIO
 #include <prussdrv.h>
 #include <pruss_intc_mapping.h>
-#include "pru.h"
 
 static unsigned int proc_read(const char *const fname) {
   FILE *const f = fopen(fname, "r");
@@ -135,3 +137,60 @@ int pru_gpio(const unsigned gpio, const unsigned pin, const unsigned direction,
 
   return 0;
 }
+#endif
+
+#if ENABLE_PRU_RPROC
+#include <PruManager.h>
+
+#include <stdexcept>
+#include <Bela.h>
+
+struct PruPrivate {
+	PruPrivate(unsigned short pru_num) : manager(pru_num, 0) {}
+	PruManagerRprocMmap manager;
+};
+PruPrivate& p(pru_t* pru)
+{
+	if(!pru || !pru->p)
+		throw std::runtime_error("PruPrivate: uninitialised\n");
+	return *(PruPrivate*)pru->p;
+}
+
+pru_t *pru_init(const unsigned short pru_num) {
+	pru_t* pru = new pru_t();
+	pru->p = new PruPrivate(pru_num);
+	auto& manager = p(pru).manager;
+	pru->pru_num = pru_num;
+	pru->data_ram = manager.getOwnMemory();
+	pru->data_ram_size = 8192;
+	unsigned int offset = 128; // let's use PRU's own ram for data
+	pru->ddr = (uint8_t*)pru->data_ram + offset; //addr in ARM space
+	pru->ddr_addr = offset; //addr in PRU space
+	pru->ddr_size = pru->data_ram_size - offset;
+	return pru;
+}
+
+void pru_exec_file(pru_t *const pru, char const* filename)
+{
+	if(p(pru).manager.start(filename))
+		fprintf(stderr, "pru_exec_file: unable to start program %s\n", filename);
+}
+
+void pru_close(pru_t *const pru)
+{
+	p(pru).manager.stop();
+	delete &p(pru);
+	delete pru;
+}
+
+#include <Gpio.h>
+static Gpio gpio;
+int pru_gpio(unsigned gpio, unsigned pin, unsigned direction, const unsigned initial_value)
+{
+	int ret = ::gpio.open({(uint16_t)gpio, (uint16_t)pin}, 0 == direction ? Gpio::INPUT : Gpio::OUTPUT);
+	if(0 == ret)
+		::gpio.write(initial_value);
+	return ret;
+}
+
+#endif
