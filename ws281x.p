@@ -79,14 +79,14 @@ lab:
 .macro WAITNS
 .mparam ns,lab
     MOV r8, 0x22000
+#ifdef IS_AM62 // 250 MHz
+    MOV r29, (ns) / 4
+#else // 200 MHz
+    MOV r29, (ns) / 5
+#endif
 lab:
  LBBO r9, r8, 0xC, 4
-
-
-
-
- QBGT lab, r9, (ns)/5
-
+ QBGT lab, r9, R29
 .endm
 
 
