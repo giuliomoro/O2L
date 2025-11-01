@@ -1,5 +1,5 @@
 set -e
 
-make -C /root/Bela RUN_FILE=aaaaaaaaaaaaaaaaaaaaaa PROJECT=O2L AT= $@
-cp O2L.service /lib/systemd/system/
-systemctl enable O2L && systemctl restart O2L
+make -C ../../ RUN_FILE=aaaaaaaaaaaaaaaaaaaaaa PROJECT=O2L
+sudo cp O2L.service /lib/systemd/system/
+sudo systemctl enable O2L && sudo systemctl restart O2L
