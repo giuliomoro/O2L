@@ -12,6 +12,7 @@
 
 const int gLocalPort = 7562; //port for incoming OSC messages
 uint8_t kNumLeds = 225; // number of LEDs on the strip
+const int gVerbose = 1;
 
 static PixelBone_Pixel strip(kNumLeds);
 static OscReceiver oscReceiver;
@@ -39,8 +40,10 @@ int parseMessage(oscpkt::Message msg, const char* address, void*)
 		kUnmatchedPattern,
 	} error = kOk;
 	static size_t count = 0;
-	printf("Message %zu from %s; %s\n", count, address, msg.addressPattern().c_str());
-	fflush(stdout);
+	if(gVerbose >= 1) {
+		printf("Message %zu from %s; %s\n", count, address, msg.addressPattern().c_str());
+		fflush(stdout);
+	}
 	count++;
 	// check state (non-display) messages first
 	std::string baseAddr = "/leds/setRaw";
@@ -117,8 +120,13 @@ int parseMessage(oscpkt::Message msg, const char* address, void*)
 				for (uint32_t p = 0; p < kNumLeds; p++)
 				{
 					size_t k = p * kBytesPerRgb;
+					if(gVerbose >= 2) {
+						printf("{%d %d %d}, ", gRgb[k + 0], gRgb[k + 1], gRgb[k + 2]);
+					}
 					strip.setPixelColor(p, PixelBone_Pixel::Color(gRgb[k + 0], gRgb[k + 1], gRgb[k + 2]));
 				}
+				if(gVerbose >= 2)
+					printf("\n");
 				strip.show();
 				strip.wait();
 			}
