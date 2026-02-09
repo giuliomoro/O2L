@@ -9,7 +9,7 @@
 #include <MiscUtilities.h>
 #include <signal.h>
 
-#define USE_OSC
+// #define USE_OSC
 
 uint8_t kNumLeds = 225; // number of LEDs on the strip
 const int gVerbose = 1;
@@ -193,3 +193,6 @@ int main(int argc, char* argv[])
 	}
 	return 0;
 }
+
+void setup() {}
+void loop() {}

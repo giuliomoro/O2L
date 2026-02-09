@@ -1834,7 +1834,7 @@ void Adafruit_NeoPixel::show(void) {
 
   // END AVR ----------------------------------------------------------------
 
-#elif defined(__arm__)
+#elif defined(__arm__) || defined(__arm64__) || defined (__aarch64__)
 
     // ARM MCUs -- Teensy 3.0, 3.1, LC, Arduino Due, RP2040 -------------------
 
