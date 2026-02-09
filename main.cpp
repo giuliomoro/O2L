@@ -7,15 +7,14 @@
 #include <vector>
 #include <cmath>
 #include <MiscUtilities.h>
-#include <libraries/OscReceiver/OscReceiver.h>
 #include <signal.h>
 
-const int gLocalPort = 7562; //port for incoming OSC messages
+#define USE_OSC
+
 uint8_t kNumLeds = 225; // number of LEDs on the strip
 const int gVerbose = 1;
 
 static PixelBone_Pixel strip(kNumLeds);
-static OscReceiver oscReceiver;
 static constexpr uint8_t kBytesPerRgb = 3;
 
 static bool gStop;
@@ -30,7 +29,28 @@ static uint8_t clipForLed(T val)
 {
 	return val > 255 ? 255 : val;
 }
+static void writeLeds(const std::vector<char>& rgb, PixelBone_Pixel& strip)
+{
+	strip.clear();
+	for (uint32_t p = 0; p < kNumLeds; p++)
+	{
+		size_t k = p * kBytesPerRgb;
+		if(gVerbose >= 2) {
+			printf("{%d %d %d}, ", rgb[k + 0], rgb[k + 1], rgb[k + 2]);
+		}
+		strip.setPixelColor(p, PixelBone_Pixel::Color(rgb[k + 0], rgb[k + 1], rgb[k + 2]));
+	}
+	if(gVerbose >= 2)
+		printf("\n");
+	strip.show();
+	strip.wait();
+}
 static std::vector<char> gRgb(kNumLeds * kBytesPerRgb);
+
+#ifdef USE_OSC
+const int gLocalPort = 7562; //port for incoming OSC messages
+#include <libraries/OscReceiver/OscReceiver.h>
+static OscReceiver oscReceiver;
 int parseMessage(oscpkt::Message msg, const char* address, void*)
 {
 	oscpkt::Message::ArgReader args = msg.arg();
@@ -116,19 +136,7 @@ int parseMessage(oscpkt::Message msg, const char* address, void*)
 			}
 			if(kOk == error)
 			{
-				strip.clear();
-				for (uint32_t p = 0; p < kNumLeds; p++)
-				{
-					size_t k = p * kBytesPerRgb;
-					if(gVerbose >= 2) {
-						printf("{%d %d %d}, ", gRgb[k + 0], gRgb[k + 1], gRgb[k + 2]);
-					}
-					strip.setPixelColor(p, PixelBone_Pixel::Color(gRgb[k + 0], gRgb[k + 1], gRgb[k + 2]));
-				}
-				if(gVerbose >= 2)
-					printf("\n");
-				strip.show();
-				strip.wait();
+				writeLeds(gRgb, strip);
 			}
 		}
 	} else
@@ -153,11 +161,13 @@ int parseMessage(oscpkt::Message msg, const char* address, void*)
 	}
 	return ret;
 }
+#endif // USE_OSC
 
 int main(int argc, char* argv[])
 {
-	// OSC
+#ifdef USE_OSC
 	oscReceiver.setup(gLocalPort, parseMessage);
+#endif
 
 	gStop = false;
 	// Set up interrupt handler to catch Control-C and SIGTERM
