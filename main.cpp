@@ -173,7 +173,23 @@ int main(int argc, char* argv[])
 	// Set up interrupt handler to catch Control-C and SIGTERM
 	signal(SIGINT, interrupt_handler);
 	signal(SIGTERM, interrupt_handler);
-	while(!gStop)
+	while(!gStop) {
+#ifndef USE_OSC
+		// demo colors
+		static unsigned int count = 0;
+		for(unsigned int n = 0; n < kNumLeds; ++n) {
+			unsigned int mod = count % 3;
+			uint8_t r = (0 == mod) * 10;
+			uint8_t g = (1 == mod) * 10;
+			uint8_t b = (2 == mod) * 10;
+			gRgb[n * kBytesPerRgb + 0] = r;
+			gRgb[n * kBytesPerRgb + 1] = g;
+			gRgb[n * kBytesPerRgb + 2] = b;
+		}
+		count++;
+		writeLeds(gRgb, strip);
+#endif // !USE_OSC
 		usleep(200000);
+	}
 	return 0;
 }
