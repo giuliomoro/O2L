@@ -1,10 +1,9 @@
 //#include "ws281x.h"
-#define GPIO_BANK 0x00600038
-#define GPIO_PIN 17 // GPIO0[49] is P2.20 on the PB2
+#define GPIO_BANK 0x00600060
+#define GPIO_PIN 0 // GPIO0[64] is P2.17 on the PB2
 #include "../../pru/board_specific.h"
 
-#define GPIO0 0x00600038
-#define GPIO_BASE 0x00600038 // GPIO_BANK
+#define GPIO_BASE GPIO_BANK
 
 .origin 0
 .entrypoint START
