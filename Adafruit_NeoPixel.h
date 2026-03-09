@@ -35,14 +35,13 @@
 
 #ifndef ADAFRUIT_NEOPIXEL_H
 #define ADAFRUIT_NEOPIXEL_H
-#if __has_include(<libraries/BelaArduino/BelaArduino.h>)
 
 #define PIXELBONE
 
 #ifdef PIXELBONE
 #define PROGMEM // for compatibility with Arduino
 #include <stdint.h>
-#include <libraries/BelaArduino/Arduino.h>
+#include <Arduino.h>
 #include "pixel.hpp"
 #endif
 
@@ -430,5 +429,4 @@ protected:
 #endif // PIXELBONE
 };
 
-#endif // has_include(<libraries/BelaArduino/BelaArduino.h>)
 #endif // ADAFRUIT_NEOPIXEL_H
