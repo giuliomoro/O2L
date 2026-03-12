@@ -4,14 +4,6 @@
 #if ENABLE_PRU_UIO
 #include "ws281x_bin.h"
 #endif // ENABLE_PRU_UIO
-#include "ws281x.h"
-
-enum {
-	GPIO0 = 0,
-	GPIO1 = 1,
-	GPIO2 = 2,
-	GPIO3 = 3,
-};
 
 PixelBone_Pixel::PixelBone_Pixel(uint16_t pixel_count)
     : pru0(pru_init(0)), num_pixels(pixel_count),
@@ -22,9 +14,6 @@ PixelBone_Pixel::PixelBone_Pixel(uint16_t pixel_count)
 
   ws281x = (ws281x_command_t *)pru0->data_ram;
   *(ws281x) = ws281x_command_t((unsigned)pixel_count);
-
-  // Configure all of our output pins.
-  pru_gpio(GPIO_BANK, GPIO_PIN, 1, 0);
 
   // Initiate the PRU0 program
 #if ENABLE_PRU_UIO

@@ -40,17 +40,6 @@ extern void pru_exec_file(pru_t *const pru, const char* filename);
 
 extern void pru_close(pru_t *const pru);
 
-/** Configure a GPIO pin.
- *
- * Since the device tree won't do it for us, we need to do it via
- * /sys/class/gpio to set the direction and initial value for
- * all of the pins that we use.
- *
- * Direction 0 == in, 1 == out.
- */
-extern int pru_gpio(unsigned gpio, unsigned pin, unsigned direction,
-                    const unsigned initial_value);
-
 #ifdef __cplusplus
 }
 #endif

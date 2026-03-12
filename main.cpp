@@ -1,8 +1,5 @@
-// On BelaMini, this runs out of the box using P2.25
-//
-// On Bela, this runs on P8.35
-// On BelaMini, you have to modify the pin and/or bank in ws281x.h,s
-// for instance GPIO_PIN 20 would be P1.20
+// This uses the PRU pin shown at the top of ws281x.p
+
 #include "pixel.hpp"
 #include <vector>
 #include <cmath>

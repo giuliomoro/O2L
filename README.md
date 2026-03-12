@@ -5,12 +5,8 @@ An OSC to addressable LED (aka Neopixel or WS2812b) bridge for Linux using Bela'
 An example of a program that can run stand-alone on Bela or a BeagleBone-series single-board computer and receive OSC and set LEDs on a Neopixel-like strip.
 It comes with a Pd example of a 16-segment VU-meter and a basic SuperCollider example.
 
-It uses a PRU to bitbang the neopixel protocol on GPIO0[8]. This is pin P8.35 on the BeagleBone (Bela).
-On PocketBeagle (BelaMini), you'll need to change the GPIO pin and/or bank in `ws281x.h`. For instance, to use P1.20 (GPIO0[20]),
-simply change the `GPIO_PIN` line in `ws281x.h` to:
-```
-#define GPIO_PIN 7
-```
+It uses a PRU to bitbang the neopixel protocol on PRU GPIO pin. See ws281x.p for the pin in use and options for your board.
+A suitable device tree overlay must be loaded to set the correct settings for the pin.
  
 Running this without external electronics requires, in principle, a bit of luck, because according to most NeoPixel-style
 datasheets, the 3.3V signal from Bela is not high enough for the LED's data line when the LEDs are powered from 5V.

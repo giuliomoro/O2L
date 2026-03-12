@@ -1,9 +1,6 @@
-//#include "ws281x.h"
-#define GPIO_BANK 0x00600060
-#define GPIO_PIN 0 // GPIO0[64] is P2.17 on the PB2
-#include "../../pru/board_specific.h"
-
-#define GPIO_BASE GPIO_BANK
+// select one of the two below
+#define GPIO_PIN 19 // PB2 (Gem Stereo, Gem Multi) P2.17
+// #define GPIO_PIN 6 // BBB (Bela, Ctag) P9.41 or PB (BelaMini) P2.28
 
 .origin 0
 .entrypoint START
@@ -133,20 +130,16 @@ WORD_LOOP:
  SET r2, r2, GPIO_PIN
  gpio0_r10_skip: 
 
+  WAITNS 800, wait_one_time
   MOV r20, (0|(1<<GPIO_PIN))
-  MOV r22, GPIO_BASE + GPIO_CLEARDATAOUT
+  NOT r30, r20 // clear the bit
 
-  WAITNS 900, wait_one_time
-  SBBO r20, r22, 0, 4
-
-  MOV r22, GPIO_BASE + GPIO_SETDATAOUT
   WAITNS 1150, wait_frame_spacing_time
   RESET_COUNTER
+  MOV r30, r20 // set the bit
 
-  SBBO r20, r22, 0, 4
-  MOV r22, GPIO_BASE + GPIO_CLEARDATAOUT
   WAITNS 240, wait_zero_time
-  SBBO r2, r22, 0, 4
+  NOT r30, r2 // conditionally clear the bit
 
   QBNE BIT_LOOP, r6, 0
 
@@ -154,11 +147,10 @@ WORD_LOOP:
  SUB r1, r1, 1
  QBNE WORD_LOOP, r1, #0
 
- MOV r20, (0|(1<<GPIO_PIN))
- MOV r10, GPIO_BASE + GPIO_CLEARDATAOUT
 
  WAITNS 1000, end_of_frame_clear_wait
- SBBO r20, r10, 0, 4
+ MOV r20, (0|(1<<GPIO_PIN))
+ NOT r30, r20 // clear the bit
 
     SLEEPNS 50000, 1, reset_time
 
