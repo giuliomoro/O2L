@@ -20,7 +20,7 @@ PixelBone_Pixel::PixelBone_Pixel(uint16_t pixel_count)
   pru_exec_code(pru0, PRUcode, sizeof(PRUcode));
 #endif
 #if ENABLE_PRU_RPROC
-  pru_exec_file(pru0, "ws281x.out");
+  pru_exec_file(pru0, "../../libraries/O2L/ws281x.out");
 #endif
 
   // Watch for a done response that indicates a proper startup

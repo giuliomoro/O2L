@@ -1,0 +1,5 @@
+name=O2L
+description=An adaptation of Adafruit_NeoPixel for Bela via PixelBone
+examples=
+license=
+dependencies=OscReceiver
